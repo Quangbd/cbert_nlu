@@ -1,10 +1,12 @@
 #include <string>
 #include <vector>
 #include <iostream>
+
+#include "model.h"
+#include "TfBert.h"
 #include "tokenizer.h"
 
-int main()
-{
+int main() {
     lh::FullTokenizer tokenizer(
             "/Users/quangbd/IdeaProjects/bert-nlu-training/data/models/tinybert/vocab.txt");
 
@@ -28,6 +30,9 @@ int main()
         }
     }
     std::cout << std::endl;
+
+    TfBert tfBert = TfBert::get_instance(reinterpret_cast<const char *>(model_tflite), model_tflite_len);
+    std::vector<float> nlu_result = tfBert.predict(input_ids, segment_ids, input_mask);
 
     return 0;
 }

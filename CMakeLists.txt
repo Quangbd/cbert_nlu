@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.17)
 project(cbert_nlu)
 
 set(CMAKE_CXX_STANDARD 11)
-set(SOURCE_FILE main.cpp tokenizer.h tokenizer.cpp utf8proc.h)
+set(SOURCE_FILE main.cpp tokenizer.h tokenizer.cpp utf8proc.h TfBert.cpp TfBert.h model.h)
 
 add_executable(cbert_nlu ${SOURCE_FILE})
 #add_library(cbert_nlu SHARED ${SOURCE_FILE})
