@@ -2,5 +2,5 @@
 
 ## Requirements
 
-- Step 1: Build [tflite](https://www.tensorflow.org/lite/guide/build_cmake#build_tensorflow_lite_c_library)
-- Step 2: Build [utf8proc](https://github.com/JuliaStrings/utf8proc)
+- Step 1: Build [utf8proc](https://github.com/JuliaStrings/utf8proc)
+- Step 2: Download [torch lib](https://download.pytorch.org/libtorch/cpu/libtorch-macos-1.8.0.zip)

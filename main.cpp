@@ -1,6 +1,7 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <torch/torch.h>
 
 #include "tokenizer.h"
 
@@ -28,6 +29,9 @@ int main() {
         }
     }
     std::cout << std::endl;
+
+    torch::Tensor tensor = torch::rand({2, 3});
+    std::cout << tensor << std::endl;
 
     return 0;
 }
