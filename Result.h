@@ -8,6 +8,8 @@
 #include <vector>
 #include <string>
 
+#include "TfBert.h"
+
 class Result {
 private:
     std::vector<std::string> intent_labels;
@@ -18,7 +20,7 @@ public:
 
     Result();
 
-    std::string convert(std::vector<float> intent_output, std::vector<float> slot_output);
+    std::string convert(std::vector<std::string> tokens, const BertResult& bert_result);
 };
 
 
