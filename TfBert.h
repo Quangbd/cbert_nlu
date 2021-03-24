@@ -20,10 +20,10 @@ private:
     TfLiteInterpreterOptions *options;
 
     // Function
-    TfBert(const char *model_buffer, size_t model_size);
+    TfBert(const char *model_path);
 
 public:
-    static TfBert &get_instance(const char *model_buffer, size_t model_size);
+    static TfBert &get_instance(const char *model_path);
 
     std::vector<float> predict(const uint64_t *input_ids, const uint64_t *segment_ids,
                                const uint64_t *input_mask);

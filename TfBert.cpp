@@ -4,8 +4,8 @@
 
 #include "TfBert.h"
 
-TfBert::TfBert(const char *model_buffer, size_t model_size) {
-    model = TfLiteModelCreate(model_buffer, model_size);
+TfBert::TfBert(const char *model_path) {
+    model = TfLiteModelCreateFromFile(model_path);
     options = TfLiteInterpreterOptionsCreate();
 
     // Create the interpreter.
@@ -13,8 +13,8 @@ TfBert::TfBert(const char *model_buffer, size_t model_size) {
     TfLiteInterpreterAllocateTensors(interpreter);
 }
 
-TfBert &TfBert::get_instance(const char *model_buffer, size_t model_size) {
-    static TfBert tfBert(model_buffer, model_size);
+TfBert &TfBert::get_instance(const char *model_path) {
+    static TfBert tfBert(model_path);
     return tfBert;
 }
 

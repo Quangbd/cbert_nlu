@@ -2,13 +2,11 @@
 #include <vector>
 #include <iostream>
 
-#include "model.h"
 #include "TfBert.h"
 #include "tokenizer.h"
 
 int main() {
-    lh::FullTokenizer tokenizer(
-            "/Users/quangbd/IdeaProjects/bert-nlu-training/data/models/tinybert/vocab.txt");
+    lh::FullTokenizer tokenizer("../data/vocab.txt");
 
     const char *text = "add sabrina salerno to the grime instrumentals playlist";
     std::vector<std::vector<std::string>> a_tokens(1);
@@ -31,7 +29,7 @@ int main() {
     }
     std::cout << std::endl;
 
-    TfBert tfBert = TfBert::get_instance(reinterpret_cast<const char *>(model_tflite), model_tflite_len);
+    TfBert tfBert = TfBert::get_instance("../data/snips/model.tflite");
     std::vector<float> nlu_result = tfBert.predict(input_ids, segment_ids, input_mask);
 
     return 0;
