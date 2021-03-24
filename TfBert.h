@@ -7,9 +7,10 @@
 
 
 #include <vector>
+#include "Result.h"
 
 extern "C" {
-#include "includes/tensorflow-lite/c/c_api.h"
+#include "tensorflow-lite/c/c_api.h"
 }
 
 class TfBert {
@@ -18,12 +19,13 @@ private:
     TfLiteInterpreter *interpreter;
     TfLiteModel *model;
     TfLiteInterpreterOptions *options;
+    Result result;
 
     // Function
-    TfBert(const char *model_path);
+    explicit TfBert(const char *model_path, const char *intent_labels_path, const char *slot_labels_path);
 
 public:
-    static TfBert &get_instance(const char *model_path);
+    static TfBert &get_instance(const char *model_path, const char *intent_labels_path, const char *slot_labels_path);
 
     std::vector<float> predict(const uint64_t *input_ids, const uint64_t *segment_ids,
                                const uint64_t *input_mask);

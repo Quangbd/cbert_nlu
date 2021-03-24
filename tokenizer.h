@@ -138,7 +138,7 @@ namespace lh {
         inline uint64_t convert_token_to_id(const std::string &token) {
             auto item = vocab->find(token);
             if (item == vocab->end()) {
-                std::cerr << "vocab missing key: " << token << std::endl;
+//                std::cerr << "vocab missing key: " << token << std::endl;
                 return 0;
             } else {
                 return item->second;

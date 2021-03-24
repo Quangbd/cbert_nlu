@@ -4,17 +4,42 @@
 
 #include "TfBert.h"
 
-TfBert::TfBert(const char *model_path) {
+void softmax(float* input, size_t size) {
+    int i;
+    float m, sum, constant;
+
+    m = -INFINITY;
+    for (i = 0; i < size; ++i) {
+        if (m < input[i]) {
+            m = input[i];
+        }
+    }
+
+    sum = 0.0;
+    for (i = 0; i < size; ++i) {
+        sum += exp(input[i] - m);
+    }
+
+    constant = m + log(sum);
+    for (i = 0; i < size; ++i) {
+        input[i] = exp(input[i] - constant);
+    }
+}
+
+TfBert::TfBert(const char *model_path, const char *intent_labels_path, const char *slot_labels_path) {
     model = TfLiteModelCreateFromFile(model_path);
     options = TfLiteInterpreterOptionsCreate();
 
     // Create the interpreter.
     interpreter = TfLiteInterpreterCreate(model, options);
     TfLiteInterpreterAllocateTensors(interpreter);
+    printf("Model was loaded\n");
+
+    result = Result(intent_labels_path, slot_labels_path);
 }
 
-TfBert &TfBert::get_instance(const char *model_path) {
-    static TfBert tfBert(model_path);
+TfBert &TfBert::get_instance(const char *model_path, const char *intent_labels_path, const char *slot_labels_path) {
+    static TfBert tfBert(model_path, intent_labels_path, slot_labels_path);
     return tfBert;
 }
 
@@ -41,6 +66,9 @@ TfBert::predict(const uint64_t *input_ids, const uint64_t *segment_ids, const ui
                              intent_output_tensor->bytes);
     TfLiteTensorCopyToBuffer(slot_output_tensor, &slot_output[0],
                              slot_output_tensor->bytes);
+    softmax(&intent_output[0], intent_output.size());
     slot_output.insert(slot_output.end(), intent_output.begin(), intent_output.end());
+    std::string result_json = result.convert(intent_output, slot_output);
+
     return slot_output;
 }
