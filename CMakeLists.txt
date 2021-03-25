@@ -12,5 +12,11 @@ if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
 endif ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
 
 target_include_directories(cbert_nlu PRIVATE includes)
-target_link_directories(cbert_nlu PUBLIC libs/osx_x86_64)
+
+if ("${BUILD_ENV}" STREQUAL "ubuntu_x86_64")
+    target_link_directories(cbert_nlu PUBLIC libs/ubuntu_x86_64)
+else ()
+    target_link_directories(cbert_nlu PUBLIC libs/osx_x86_64)
+endif ("${BUILD_ENV}" STREQUAL "ubuntu_x86_64")
+
 target_link_libraries(cbert_nlu tensorflowlite_c utf8proc pthread m dl)

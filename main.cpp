@@ -17,10 +17,11 @@ int main() {
     tokens.insert(tokens.begin(), "[CLS]");
     tokens.emplace_back("[SEP]");
 
-    uint64_t input_ids[50];
+    uint64_t input_ids[50] = {0};
     uint64_t input_mask[50] = {0};
     uint64_t segment_ids[50] = {0};
-    for (int i = 0; i < 50; ++i) {
+    printf("Input: ");
+    for (int i = 0; i < tokens.size(); ++i) {
         printf("%s ", tokens[i].c_str());
         uint64_t token_id = tokenizer.convert_token_to_id(tokens[i]);
         input_ids[i] = token_id;
@@ -34,6 +35,7 @@ int main() {
     BertResult nlu_result = tfBert.predict(input_ids, segment_ids, input_mask);
     Result result("../data/snips/intent_label.txt","../data/snips/slot_label.txt");
     std::string final_result = result.convert(tokens, nlu_result);
+    printf("Result:\n%s", final_result.c_str());
 
     return 0;
 }

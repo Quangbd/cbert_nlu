@@ -51,7 +51,6 @@ std::string Result::convert(std::vector<std::string> tokens, const BertResult &b
 
         if ((count > 0) && (value[0] == '#') && (value[1] == '#')) {
             values[count - 1] = values[count - 1].append(value.replace(0, 2, ""));
-            printf("%s\n", value.c_str());
         } else {
             values.push_back(value);
             slot_names.push_back(slot_name);
@@ -62,7 +61,7 @@ std::string Result::convert(std::vector<std::string> tokens, const BertResult &b
     result_json["tokens"] = values;
     result_json["slot_labels"] = slot_names;
 
-    return result_json.dump();
+    return result_json.dump(4);
 }
 
 Result::Result() = default;

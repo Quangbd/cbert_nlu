@@ -3,6 +3,8 @@
 //
 
 #include "TfBert.h"
+#include <cmath>
+#include <cstdio>
 
 void softmax(float *input, size_t size) {
     int i;
