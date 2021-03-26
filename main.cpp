@@ -1,41 +1,38 @@
 #include <string>
 #include <vector>
+#include <iostream>
+#include <torch/torch.h>
+#include <torch/script.h>
+#include <memory>
+#include "wav_data.h"
 
-#include "Result.h"
-#include "TfBert.h"
 #include "tokenizer.h"
 
 int main() {
-    lh::FullTokenizer tokenizer("../data/vocab.txt");
+    float input_wav[80000] = WAVE_DATA;
 
-    const char *text = "add sabrina salerno to the grime instrumentals playlist";
-
-    std::vector<std::vector<std::string>> a_tokens(1);
-    tokenizer.tokenize(text, &a_tokens[0], 50);
-    std::vector<std::string> tokens = a_tokens[0];
-    printf("Len tokens: %lu\n", tokens.size());
-    tokens.insert(tokens.begin(), "[CLS]");
-    tokens.emplace_back("[SEP]");
-
-    uint64_t input_ids[50] = {0};
-    uint64_t input_mask[50] = {0};
-    uint64_t segment_ids[50] = {0};
-    printf("Input: ");
-    for (int i = 0; i < tokens.size(); ++i) {
-        printf("%s ", tokens[i].c_str());
-        uint64_t token_id = tokenizer.convert_token_to_id(tokens[i]);
-        input_ids[i] = token_id;
-        if (token_id > 0) {
-            input_mask[i] = 1;
-        }
+    torch::Tensor tensor = torch::rand({2, 3});
+    torch::jit::script::Module module;
+    try {
+        module = torch::jit::load("../model.pt");
     }
-    printf("\n");
+    catch (const c10::Error &e) {
+        std::cerr << "error loading the model\n";
+        return -1;
+    }
 
-    TfBert tfBert = TfBert::get_instance("../data/snips/model.tflite");
-    BertResult nlu_result = tfBert.predict(input_ids, segment_ids, input_mask);
-    Result result("../data/snips/intent_label.txt","../data/snips/slot_label.txt");
-    std::string final_result = result.convert(tokens, nlu_result);
-    printf("Result:\n%s", final_result.c_str());
+    std::vector<torch::jit::IValue> inputs;
+    auto options = torch::TensorOptions().dtype(torch::kFloat);
+    inputs.emplace_back(torch::from_blob(input_wav, {1, 80000}, options));
+    at::Tensor output = module.forward(inputs).toTensor();
+    output = output.contiguous();
+    std::vector<float> v_output(output.data_ptr<float>(), output.data_ptr<float>() + output.numel());
+    
+    for (int i=0;i<v_output.size();i++){
+        std::cout<<v_output[i];
+        std::cout << '\n';
+    }
+    std::cout << '\n';
 
     return 0;
 }
