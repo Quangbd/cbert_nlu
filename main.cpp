@@ -4,6 +4,7 @@
 #include "Result.h"
 #include "TfBert.h"
 #include "tokenizer.h"
+#include <chrono>
 
 int main() {
     lh::FullTokenizer tokenizer("../data/vocab.txt");
@@ -33,9 +34,17 @@ int main() {
 
     TfBert tfBert = TfBert::get_instance("../data/snips/model.tflite");
     BertResult nlu_result = tfBert.predict(input_ids, segment_ids, input_mask);
-    Result result("../data/snips/intent_label.txt","../data/snips/slot_label.txt");
+    long start = std::chrono::duration_cast<std::chrono::milliseconds>(
+            std::chrono::system_clock::now().time_since_epoch()).count();
+    for (int i = 0; i < 1000; i++) {
+        tfBert.predict(input_ids, segment_ids, input_mask);
+    }
+    long end = std::chrono::duration_cast<std::chrono::milliseconds>(
+            std::chrono::system_clock::now().time_since_epoch()).count();
+    Result result("../data/snips/intent_label.txt", "../data/snips/slot_label.txt");
     std::string final_result = result.convert(tokens, nlu_result);
     printf("Result:\n%s", final_result.c_str());
+    std::cout << (end - start) / 1000 << "\n";
 
     return 0;
 }
