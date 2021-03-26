@@ -19,10 +19,10 @@ int main() {
     tokens.insert(tokens.begin(), "[CLS]");
     tokens.emplace_back("[SEP]");
 
-    uint64_t input_ids[50];
+    uint64_t input_ids[50] = {0};
     uint64_t input_mask[50] = {0};
     uint64_t segment_ids[50] = {0};
-    for (int i = 0; i < 50; ++i) {
+    for (int i = 0; i < input_ids.size(); ++i) {
         std::cout << tokens[i] << ' ';
         uint64_t token_id = tokenizer.convert_token_to_id(tokens[i]);
         input_ids[i] = token_id;
